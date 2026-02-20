@@ -6,15 +6,15 @@ Nettside for Håvards gard — geiter, epler, cider og traktor.
 
 ```bash
 cd /mnt/user/appdata
-git clone https://github.com/frekarlsen/havards-geiter.git
-cd havardsgeiter
+git clone https://github.com/frekarlsen/haavards-geiter.git
+cd haavards-geiter
 docker compose up -d --build
 ```
 
 ## Oppdatering
 
 ```bash
-cd /mnt/user/appdata/havardsgeiter
+cd /mnt/user/appdata/haavards-geiter
 git pull
 docker compose up -d --build
 ```
