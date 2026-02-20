@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  haavards-geiter:
+    build: .
+    container_name: haavards-geiter
+    restart: unless-stopped
+    networks:
+      - dockernet
+
+networks:
+  dockernet:
+    external: true

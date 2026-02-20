@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Håvards Geiter — Bæææ! 🐐</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream: #f5f0e8;
+            --warm-brown: #5c3d2e;
+            --moss: #6b7c4e;
+            --moss-light: #8fa462;
+            --earth: #a0845c;
+            --bark: #3e2a1a;
+            --sky: #c5d5c0;
+            --accent: #d4a843;
+            --stone: #8a8075;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--cream);
+            color: var(--bark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- GRAIN OVERLAY --- */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* --- NAV --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245, 240, 232, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(94, 61, 46, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 4px 30px rgba(62, 42, 26, 0.06);
+        }
+
+        .nav-logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--warm-brown);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span { color: var(--moss); }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--stone);
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--moss);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--moss); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            background: linear-gradient(180deg, #e8e0d4 0%, var(--cream) 60%, var(--sky) 100%);
+        }
+
+        .hero-mountains {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .mountain-1 {
+            width: 60%;
+            height: 250px;
+            left: -10%;
+            background: linear-gradient(180deg, #9aab82, #7d9460);
+            opacity: 0.3;
+        }
+
+        .mountain-2 {
+            width: 50%;
+            height: 200px;
+            right: -5%;
+            background: linear-gradient(180deg, #8a9b72, #6b8550);
+            opacity: 0.25;
+        }
+
+        .mountain-3 {
+            width: 80%;
+            height: 150px;
+            left: 10%;
+            background: linear-gradient(180deg, #a8b892, #8fa87a);
+            opacity: 0.2;
+        }
+
+        .hero-subtitle {
+            font-size: 0.85rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--moss);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.2s forwards;
+        }
+
+        .hero h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.05;
+            color: var(--warm-brown);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.4s forwards;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--moss);
+        }
+
+        .hero-desc {
+            max-width: 520px;
+            font-size: 1.15rem;
+            color: var(--stone);
+            font-weight: 300;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.8s forwards;
+        }
+
+        .hero-tagline {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--earth);
+            opacity: 0;
+            animation: fadeUp 1s ease 0.55s forwards;
+            margin-bottom: 1rem;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+
+        .scroll-hint span {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--stone);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: var(--stone);
+            animation: scrollPulse 2s ease infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* --- GOAT PASTURE (in hero) --- */
+        .goat-pasture-hero {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 280px;
+            background: linear-gradient(180deg, transparent 0%, rgba(181, 201, 168, 0.4) 30%, rgba(143, 176, 112, 0.6) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: crosshair;
+            user-select: none;
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+            z-index: 10;
+        }
+
+        .goat-pasture-label {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(62, 42, 26, 0.5);
+            z-index: 10;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .goat {
+            position: absolute;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+            z-index: 5;
+        }
+
+        .goat:hover { transform: scale(1.2); }
+
+        .goat.jumping {
+            animation: goatJump 0.5s ease;
+        }
+
+        @keyframes goatJump {
+            0% { transform: translateY(0) scale(1); }
+            40% { transform: translateY(-40px) scale(1.15) rotate(-5deg); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        .baa-bubble {
+            position: absolute;
+            background: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-family: 'DM Serif Display', serif;
+            font-size: 0.9rem;
+            color: var(--warm-brown);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            pointer-events: none;
+            animation: baaPop 1.5s ease forwards;
+            z-index: 20;
+            white-space: nowrap;
+        }
+
+        .baa-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 20px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes baaPop {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            15% { opacity: 1; transform: translateY(-15px) scale(1); }
+            70% { opacity: 1; transform: translateY(-25px); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        .grass-blade {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to top, #6a9b45, #8fc060);
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            z-index: 1;
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--moss);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            color: var(--warm-brown);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+
+        /* --- ABOUT --- */
+        .about { background: var(--cream); }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, #c5b8a0, #a09070);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image::before {
+            content: '🐐';
+            position: absolute;
+            font-size: 6rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: grayscale(30%);
+        }
+
+        .about-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(62,42,26,0.2));
+        }
+
+        .about-text p {
+            font-size: 1.05rem;
+            color: var(--stone);
+            font-weight: 300;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p strong {
+            color: var(--warm-brown);
+            font-weight: 500;
+        }
+
+        /* --- PRODUCTS --- */
+        .products {
+            background: var(--bark);
+            color: var(--cream);
+        }
+
+        .products .section-tag { color: var(--accent); }
+        .products .section-title { color: var(--cream); }
+
+        .product-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .product-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--moss), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover { 
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-4px);
+        }
+
+        .product-card:hover::before { transform: scaleX(1); }
+
+        .product-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+
+        .product-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--cream);
+        }
+
+        .product-card p {
+            font-size: 0.95rem;
+            color: rgba(245, 240, 232, 0.6);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* --- VALUES --- */
+        .values { background: var(--sky); }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-item {
+            padding: 2rem;
+            background: rgba(245, 240, 232, 0.6);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .value-item h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: var(--warm-brown);
+            margin-bottom: 0.6rem;
+        }
+
+        .value-item p {
+            font-size: 0.95rem;
+            color: var(--stone);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* --- CONTACT --- */
+        .contact {
+            background: var(--cream);
+            text-align: center;
+        }
+
+        .contact-info {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-item .icon {
+            font-size: 1.5rem;
+        }
+
+        .contact-item span {
+            font-size: 0.95rem;
+            color: var(--stone);
+        }
+
+        .contact-item a {
+            color: var(--moss);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--bark);
+            color: rgba(245, 240, 232, 0.4);
+            text-align: center;
+            padding: 2.5rem;
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+
+        footer span { color: var(--accent); }
+
+        /* --- GOAT COUNTER --- */
+        .goat-counter {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--warm-brown);
+            color: var(--cream);
+            padding: 0.7rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(62, 42, 26, 0.3);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .goat-counter:hover { transform: scale(1.05); }
+        .goat-counter .count {
+            background: var(--moss);
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .product-cards { grid-template-columns: 1fr; }
+            .values-grid { grid-template-columns: 1fr; }
+            .contact-info { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="navbar">
+    <a href="#" class="nav-logo">Håvards <span>Geiter</span></a>
+    <ul class="nav-links">
+        <li><a href="#om">Om garden</a></li>
+        <li><a href="#produkter">Produkt</a></li>
+        <li><a href="#verdier">Verdiar</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+</nav>
+
+<section class="hero" id="pasture">
+    <p class="hero-subtitle">Gard, geiter & galenskap sidan 1987</p>
+    <h1>Håvards<br><em>Geiter</em></h1>
+    <p class="hero-tagline">— og litt epler, cider & traktor på si</p>
+    <p class="hero-desc">Dei brekker, dei hoppar, dei et alt dei kjem over. Trykk på geitene og sjå sjølv. 👇</p>
+    
+    <!-- Integrated goat pasture in hero -->
+    <div class="goat-pasture-hero" id="pastureArea">
+        <div class="goat-pasture-label">🐐 Trykk på geitene — dei har mykje på hjartet</div>
+    </div>
+
+    <div class="scroll-hint">
+        <span>Meir nedanfor</span>
+        <div class="scroll-line"></div>
+    </div>
+    <div class="hero-mountains">
+        <div class="mountain mountain-1"></div>
+        <div class="mountain mountain-3"></div>
+        <div class="mountain mountain-2"></div>
+    </div>
+</section>
+
+<section class="about" id="om">
+    <div class="section-inner">
+        <div class="about-grid">
+            <div class="about-image"></div>
+            <div class="about-text reveal">
+                <p class="section-tag">Om garden</p>
+                <h2 class="section-title">Geiter, eplehagar & kontrollert kaos</h2>
+                <p>
+                    <strong>Håvards Geiter</strong> er ein gard der geitene bestemmer meir enn dei burde. 
+                    Dei har beita fritt i generasjonar — og nektar å slutte no.
+                </p>
+                <p>
+                    Geitene lever livet med fjellbeite om sommaren og varme fjøs om vinteren. 
+                    Ved sida av geiteholdet driv vi med eplehagedyrking — gamle norske sortar 
+                    som vi pressar til gårdscider i eige presseri. Frå frukt til flaske, alt skjer på garden.
+                    Geitene prøver å ete epla før vi rekk å plukke dei.
+                </p>
+                <p>
+                    Håvard er like gjerne å sjå bak rattet på traktoren som ute blant geitene. 
+                    Anten det er pløying om våren, eplesanking om hausten eller fôrkøyring om vinteren 
+                    — traktoren er like viktig som fjøset. Kvar geit har eit namn, kvar epletre har ei historie, 
+                    og kvar flaske cider ber preg av jorda (og geitene) den kjem frå.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="products" id="produkter">
+    <div class="section-inner">
+        <p class="section-tag reveal">Frå gard til bord</p>
+        <h2 class="section-title reveal">Produkt & Tenester</h2>
+        <div class="product-cards">
+            <div class="product-card reveal">
+                <span class="product-emoji">🐐</span>
+                <h3>Geitemelk & Ost</h3>
+                <p>Fersk geitemelk og handlaga ost frå verdas mest sjølvgode geiter. Brunost, chevré og kvitost — alt laga på garden medan geitene ser på og dømer.</p>
+            </div>
+            <div class="product-card reveal">
+                <span class="product-emoji">🍎</span>
+                <h3>Epler</h3>
+                <p>Gamle norske eplesortar frå hagen. Gravenstein, Aroma og fleire — plukka for hand, raskare enn geitene rekk å stele dei.</p>
+            </div>
+            <div class="product-card reveal">
+                <span class="product-emoji">🍺</span>
+                <h3>Gårdscider</h3>
+                <p>Naturleg cider pressa og gjæra på garden. Frå tre til flaske utan snarvegar. Tørr, halvtørr og søt — geitene får ikkje smake.</p>
+            </div>
+            <div class="product-card reveal">
+                <span class="product-emoji">🚜</span>
+                <h3>Traktor & Tenester</h3>
+                <p>Brøyting, pløying og diverse gardsarbeid. Håvard og traktoren stiller opp for naboar — geitene held seg heldigvis heime.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="values" id="verdier">
+    <div class="section-inner">
+        <p class="section-tag reveal">Slik vi driv</p>
+        <h2 class="section-title reveal">Våre verdiar</h2>
+        <div class="values-grid">
+            <div class="value-item reveal">
+                <h3>Geitene bestemmer</h3>
+                <p>Geitene er sjefane her. Fritt beite, godt stell og merksemd på bestilling. Nøgde geiter gir betre mjølk — og færre rømningsforsøk.</p>
+            </div>
+            <div class="value-item reveal">
+                <h3>Frå jord til bord</h3>
+                <p>Eple vert til cider, mjølk vert til ost. Alt skjer på garden, med korte vegar og fulle kretsløp. Geitene gjødslar jorda som gjev oss epla. Sirkel slutt.</p>
+            </div>
+            <div class="value-item reveal">
+                <h3>Lokal forankring</h3>
+                <p>Vi sel lokalt og stør nærsamfunnet. Kortreist mat, traktorhjelp til naboane og ope fjøs for dei som toler geitebrekking.</p>
+            </div>
+            <div class="value-item reveal">
+                <h3>Tradisjon & Traktor</h3>
+                <p>Gammal kunnskap møter moderne reiskap. Traktoren er like viktig som mjølkespannet — og mykje vanskelegare for geitene å velte.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact" id="kontakt">
+    <div class="section-inner">
+        <p class="section-tag reveal">Kom innom</p>
+        <h2 class="section-title reveal">Besøk oss på garden</h2>
+        <p class="reveal" style="color: var(--stone); font-weight: 300; max-width: 500px; margin: 0 auto;">
+            Vi tek gjerne imot besøk etter avtale. Kom og møt geitene, smak på cideren, 
+            og opplev geitegalenskap på nært hald.
+        </p>
+        <div class="contact-info reveal">
+            <div class="contact-item">
+                <span class="icon">📍</span>
+                <span>Gårdsveien 42, Norge</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">📞</span>
+                <a href="tel:+4712345678">+47 123 45 678</a>
+            </div>
+            <div class="contact-item">
+                <span class="icon">✉️</span>
+                <a href="mailto:post@haavardsgaard.no">post@haavardsgaard.no</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Håvards Geiter — Laga med <span>♥</span>, geitemelk og ei snev galenskap</p>
+</footer>
+
+<!-- Goat Click Counter -->
+<div class="goat-counter" id="goatCounter">
+    🐐 Brekk: <span class="count" id="baaCount">0</span>
+</div>
+
+<script>
+    // --- NAV SCROLL EFFECT ---
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // --- SCROLL REVEAL ---
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 100);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+
+    // --- INTERACTIVE GOAT PASTURE ---
+    const pasture = document.getElementById('pastureArea');
+    const baaCountEl = document.getElementById('baaCount');
+    let baaCount = 0;
+
+    const goatEmojis = ['🐐', '🐐', '🐑', '🐐', '🐐'];
+    const goatNames = ['Greta', 'Bjørk', 'Frøya', 'Sølvi', 'Kåre', 'Trine', 'Odin', 'Nora'];
+    const baaSounds = [
+        'Bææææ!', 'Mæh!', 'Bææ?', '...bæ.', 'BÆÆÆÆ!!',
+        'Mæææh~', 'Bæ bæ!', '*tygger*', 'Hei!', '🌿 nam!',
+        'Meir gras!', '*hoppar*', 'Bæ-hehe!', 'Kje meg!',
+        'Fjelltur?', '*ser på deg*', 'Eple? 🍎', 'Meh.',
+        'Cider? Nei takk!', '🚜 vrøøøm!', '*et eit eple*', 'Bæææ-st!',
+        'Slepp meg inn!', 'Er det mat?', '*gnagar på gjerde*',
+        'Håvard!!', 'Eg rømmer!', '*ser misnøgd ut*', 'Klø meg!',
+        'Traktor = skummelt', '🍎 MIN!', '*planlegg flukt*',
+    ];
+
+    // Create grass
+    for (let i = 0; i < 80; i++) {
+        const grass = document.createElement('div');
+        grass.className = 'grass-blade';
+        grass.style.left = Math.random() * 100 + '%';
+        grass.style.height = (20 + Math.random() * 40) + 'px';
+        grass.style.opacity = 0.4 + Math.random() * 0.6;
+        grass.style.transform = `rotate(${-15 + Math.random() * 30}deg)`;
+        pasture.appendChild(grass);
+    }
+
+    // Create goats
+    const goats = [];
+    for (let i = 0; i < 6; i++) {
+        const goat = document.createElement('div');
+        goat.className = 'goat';
+        goat.textContent = goatEmojis[i % goatEmojis.length];
+        goat.style.left = (10 + (i * 15) + Math.random() * 8) + '%';
+        goat.style.bottom = (20 + Math.random() * 40) + '%';
+        goat.dataset.name = goatNames[i];
+        goat.title = goatNames[i];
+
+        // Gentle idle animation
+        goat.style.animation = `none`;
+        const drift = () => {
+            const x = parseFloat(goat.style.left);
+            const newX = Math.max(5, Math.min(90, x + (Math.random() - 0.5) * 3));
+            goat.style.transition = 'left 3s ease';
+            goat.style.left = newX + '%';
+            if (Math.random() > 0.5) {
+                goat.style.transform = newX > x ? 'scaleX(1)' : 'scaleX(-1)';
+            }
+        };
+        setInterval(drift, 3000 + Math.random() * 4000);
+
+        // Click handler
+        goat.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goat.classList.remove('jumping');
+            void goat.offsetWidth;
+            goat.classList.add('jumping');
+
+            const baa = document.createElement('div');
+            baa.className = 'baa-bubble';
+            const msg = Math.random() > 0.3
+                ? baaSounds[Math.floor(Math.random() * baaSounds.length)]
+                : goat.dataset.name + ': ' + baaSounds[Math.floor(Math.random() * baaSounds.length)];
+            baa.textContent = msg;
+            baa.style.left = goat.style.left;
+            baa.style.bottom = (parseInt(goat.style.bottom) + 15) + '%';
+            pasture.appendChild(baa);
+
+            baaCount++;
+            baaCountEl.textContent = baaCount;
+
+            setTimeout(() => baa.remove(), 1500);
+            setTimeout(() => goat.classList.remove('jumping'), 500);
+        });
+
+        pasture.appendChild(goat);
+        goats.push(goat);
+    }
+
+    // Mouse parallax on pasture - goats look at cursor
+    pasture.addEventListener('mousemove', (e) => {
+        const rect = pasture.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left) / rect.width;
+
+        document.querySelectorAll('.grass-blade').forEach(blade => {
+            const bladeX = parseFloat(blade.style.left) / 100;
+            const dist = mouseX - bladeX;
+            const angle = dist * 20;
+            blade.style.transform = `rotate(${angle}deg)`;
+            blade.style.transition = 'transform 0.5s ease';
+        });
+    });
+</script>
+
+</body>
+</html>
