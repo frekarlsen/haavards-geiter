@@ -4,6 +4,8 @@ services:
   haavards-geiter:
     build: .
     container_name: haavards-geiter
+    ports:
+      - "8811:80"
     restart: unless-stopped
     networks:
       - dockernet
